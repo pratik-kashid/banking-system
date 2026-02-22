@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - SecureBank</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0A2540;
+            --secondary: #1E3A5F;
+            --accent: #D4AF37;
+            --accent-light: #F4E4C1;
+            --text: #1A1A1A;
+            --text-light: #6B7280;
+            --bg: #F9FAFB;
+            --white: #FFFFFF;
+            --success: #059669;
+            --danger: #DC2626;
+            --warning: #F59E0B;
+            --shadow: rgba(10, 37, 64, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: var(--primary);
+            color: white;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .sidebar-content {
+            padding: 2rem 0;
+            padding-bottom: 120px;
+        }
+
+        .sidebar-logo {
+            padding: 0 2rem;
+            margin-bottom: 3rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, var(--accent), #F4E4C1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .user-info {
+            padding: 0 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .user-email {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .nav-link.active {
+            background: rgba(212, 175, 55, 0.2);
+            color: var(--accent);
+            border-left: 3px solid var(--accent);
+        }
+
+        .nav-icon {
+            font-size: 1.3rem;
+        }
+
+        .logout-btn {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            width: calc(280px - 4rem);
+            padding: 1rem;
+            background: rgba(220, 38, 38, 0.2);
+            color: white;
+            border: 1px solid rgba(220, 38, 38, 0.4);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            z-index: 1001;
+            font-size: 1rem;
+        }
+
+        .logout-btn:hover {
+            background: rgba(220, 38, 38, 0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .top-bar {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px var(--shadow);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .top-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .action-btn {
+            padding: 0.8rem 1.5rem;
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        /* Section */
+        .section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .btn-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Account Card - Main Display */
+        .account-card {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 3rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .account-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .account-card-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .account-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 3rem;
+        }
+
+        .account-type-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .account-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(5, 150, 105, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+        }
+
+        .account-details-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .detail-item h4 {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            font-size: 2rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+        }
+
+        .detail-value.account-number {
+            font-family: 'Courier New', monospace;
+            font-size: 1.6rem;
+            letter-spacing: 2px;
+        }
+
+        .account-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .account-btn {
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .account-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Setup Account */
+        .setup-card {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .setup-icon {
+            font-size: 5rem;
+            margin-bottom: 2rem;
+        }
+
+        .setup-card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .setup-card p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .setup-btn {
+            padding: 1.2rem 3rem;
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .setup-btn:hover {
+            background: var(--primary);
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        /* Transaction Table */
+        .transaction-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .transaction-table th {
+            text-align: left;
+            padding: 1rem;
+            color: var(--text-light);
+            font-weight: 600;
+            font-size: 0.9rem;
+            border-bottom: 2px solid #E5E7EB;
+        }
+
+        .transaction-table td {
+            padding: 1.2rem 1rem;
+            border-bottom: 1px solid #F3F4F6;
+        }
+
+        .transaction-table tr:hover {
+            background: var(--bg);
+        }
+
+        .transaction-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .icon-deposit {
+            background: rgba(5, 150, 105, 0.1);
+            color: var(--success);
+        }
+
+        .icon-withdrawal {
+            background: rgba(220, 38, 38, 0.1);
+            color: var(--danger);
+        }
+
+        .icon-transfer {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .transaction-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .transaction-details h4 {
+            color: var(--text);
+            margin-bottom: 0.2rem;
+            font-weight: 600;
+        }
+
+        .transaction-details p {
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        .amount-credit {
+            color: var(--success);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .amount-debit {
+            color: var(--danger);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: rgba(5, 150, 105, 0.1);
+            color: var(--success);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            margin-bottom: 2rem;
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #E5E7EB;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: 'Outfit', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        .form-hint {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 0.3rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 1rem;
+            background: #E5E7EB;
+            color: var(--text);
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn {
+            flex: 1;
+            padding: 1rem;
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: var(--primary);
+            color: var(--accent);
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .alert.success {
+            background: #D1FAE5;
+            color: #065F46;
+            border: 1px solid #A7F3D0;
+        }
+
+        .alert.error {
+            background: #FEE2E2;
+            color: #991B1B;
+            border: 1px solid #FECACA;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-light);
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .account-details-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Sidebar -->
+<aside class="sidebar">
+    <div class="sidebar-content">
+        <div class="sidebar-logo">
+            <div class="logo-icon">BOP</div>
+            BankOfPune
+        </div>
+
+        <div class="user-info">
+            <div class="user-avatar" id="userAvatar">U</div>
+            <div class="user-name" id="userName">Loading...</div>
+            <div class="user-email" id="userEmail">Loading...</div>
+        </div>
+
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="#" class="nav-link active" onclick="showSection(event, 'dashboard')">
+                    <span class="nav-icon">🏠</span>
+                    Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" onclick="showSection(event, 'transactions')">
+                    <span class="nav-icon">💸</span>
+                    Transactions
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" onclick="showSection(event, 'transfer')">
+                    <span class="nav-icon">🔄</span>
+                    Transfer Money
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" onclick="showSection(event, 'profile')">
+                    <span class="nav-icon">👤</span>
+                    Profile
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" onclick="showSection(event, 'settings')">
+                    <span class="nav-icon">⚙️</span>
+                    Settings
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+</aside>
+
+<!-- Main Content -->
+<main class="main-content">
+    <div class="top-bar">
+        <h1 class="page-title" id="pageTitle">Dashboard</h1>
+        <div class="top-actions">
+            <button class="action-btn" onclick="openModal('withdraw')">💵 Withdraw</button>
+            <button class="action-btn" onclick="openModal('deposit')">💰 Deposit</button>
+        </div>
+    </div>
+
+    <div id="alertBox" class="alert"></div>
+
+    <!-- Dashboard Section -->
+    <div id="dashboardSection" class="content-section active">
+        <div id="accountDisplay">
+            <!-- Account will be loaded here -->
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Recent Transactions</h2>
+                <a href="#" class="btn-link" onclick="showSection(event, 'transactions')">View All →</a>
+            </div>
+            <div id="recentTransactionsList">
+                <div class="empty-state">
+                    <div class="empty-icon">📝</div>
+                    <p>No transactions yet</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transactions Section -->
+    <div id="transactionsSection" class="content-section">
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">All Transactions</h2>
+                <a href="#" class="btn-link" onclick="loadAllTransactions()">↻ Refresh</a>
+            </div>
+            <div id="allTransactionsList">
+                <div class="empty-state">
+                    <div class="empty-icon">📝</div>
+                    <p>Loading transactions...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transfer Section -->
+    <div id="transferSection" class="content-section">
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Transfer Money</h2>
+            </div>
+            <div style="max-width: 600px;">
+                <form onsubmit="transferMoney(event)">
+                    <div class="form-group">
+                        <label class="form-label">From Account (Your Account)</label>
+                        <input type="text" id="transferFromAccount" class="form-input" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">To Account Number</label>
+                        <input type="text" id="transferToAccount" class="form-input" placeholder="Enter recipient account number" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Amount (₹)</label>
+                        <input type="number" id="transferAmount" class="form-input" placeholder="Enter amount" min="0.01" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Security PIN</label>
+                        <input type="password" id="transferPin" class="form-input" placeholder="Enter your PIN" required minlength="4" maxlength="6" pattern="[0-9]+">
+                        <p class="form-hint">Enter your account PIN for security verification</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description (Optional)</label>
+                        <input type="text" id="transferDescription" class="form-input" placeholder="Enter description">
+                    </div>
+                    <button type="submit" class="submit-btn" style="width: 100%;">Transfer Money</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Section -->
+    <div id="profileSection" class="content-section">
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Your Profile</h2>
+            </div>
+            <div style="max-width: 600px;">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" id="profileFullName" class="form-input" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input type="text" id="profileUsername" class="form-input" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" id="profileEmail" class="form-input" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Phone Number</label>
+                    <input type="text" id="profilePhone" class="form-input" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Account Status</label>
+                    <input type="text" value="✅ Verified & Active" class="form-input" readonly style="color: var(--success); font-weight: 600;">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Member Since</label>
+                    <input type="text" id="memberSince" class="form-input" readonly>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Section -->
+    <div id="settingsSection" class="content-section">
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Settings</h2>
+            </div>
+            <div style="max-width: 600px;">
+                <div class="setting-item" style="padding: 1.5rem; background: white; border: 2px solid #E5E7EB; border-radius: 10px; margin-bottom: 1rem; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='#E5E7EB'">
+                    <h4 style="margin-bottom: 0.5rem; color: var(--primary);">🔔 Notifications</h4>
+                    <p style="color: var(--text-light); font-size: 0.9rem;">Manage your notification preferences</p>
+                </div>
+                <div class="setting-item" style="padding: 1.5rem; background: white; border: 2px solid #E5E7EB; border-radius: 10px; margin-bottom: 1rem; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='#E5E7EB'">
+                    <h4 style="margin-bottom: 0.5rem; color: var(--primary);">🔒 Security</h4>
+                    <p style="color: var(--text-light); font-size: 0.9rem;">Update password and security settings</p>
+                </div>
+                <div class="setting-item" style="padding: 1.5rem; background: white; border: 2px solid #E5E7EB; border-radius: 10px; margin-bottom: 1rem; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='#E5E7EB'">
+                    <h4 style="margin-bottom: 0.5rem; color: var(--primary);">🌐 Language</h4>
+                    <p style="color: var(--text-light); font-size: 0.9rem;">Choose your preferred language</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Create Account Modal -->
+<div id="createAccountModal" class="modal-overlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 class="modal-title">Create Your Account</h2>
+            <p style="color: var(--text-light);">Set up your banking account</p>
+        </div>
+        <form onsubmit="createAccount(event)">
+            <div class="form-group">
+                <label class="form-label">Account Number</label>
+                <input type="text" id="newAccountNumber" class="form-input" placeholder="Enter 10-16 digit account number" required minlength="10" maxlength="16" pattern="[0-9]+">
+                <p class="form-hint">Choose a unique 10-16 digit account number</p>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Account Type</label>
+                <select id="newAccountType" class="form-select" required>
+                    <option value="SAVINGS">Savings Account</option>
+                    <option value="CURRENT">Current Account</option>
+                    <option value="FIXED_DEPOSIT">Fixed Deposit</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Security PIN</label>
+                <input type="password" id="newAccountPin" class="form-input" placeholder="Enter 4-6 digit PIN" required minlength="4" maxlength="6" pattern="[0-9]+">
+                <p class="form-hint">This PIN will be required for withdrawals</p>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Initial Deposit (₹)</label>
+                <input type="number" id="newInitialDeposit" class="form-input" placeholder="Enter amount (optional)" min="0" step="0.01" value="0">
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                <button type="submit" class="submit-btn">Create Account</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Withdraw Modal with PIN -->
+<div id="withdrawModal" class="modal-overlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 class="modal-title">Withdraw Money</h2>
+            <p style="color: var(--text-light);">Withdraw funds from your account</p>
+        </div>
+        <form onsubmit="withdrawMoney(event)">
+            <div class="form-group">
+                <label class="form-label">Account Number</label>
+                <input type="text" id="withdrawAccount" class="form-input" readonly>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Amount (₹)</label>
+                <input type="number" id="withdrawAmount" class="form-input" placeholder="Enter amount" min="0.01" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Security PIN</label>
+                <input type="password" id="withdrawPin" class="form-input" placeholder="Enter your PIN" required minlength="4" maxlength="6" pattern="[0-9]+">
+                <p class="form-hint">Enter the PIN you set during account creation</p>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Description (Optional)</label>
+                <input type="text" id="withdrawDesc" class="form-input" placeholder="Enter description">
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                <button type="submit" class="submit-btn">Withdraw</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Deposit Modal -->
+<div id="depositModal" class="modal-overlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 class="modal-title">Deposit Money</h2>
+            <p style="color: var(--text-light);">Add funds to your account</p>
+        </div>
+        <form onsubmit="depositMoney(event)">
+            <div class="form-group">
+                <label class="form-label">Account Number</label>
+                <input type="text" id="depositAccount" class="form-input" readonly>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Amount (₹)</label>
+                <input type="number" id="depositAmount" class="form-input" placeholder="Enter amount" min="0.01" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Description (Optional)</label>
+                <input type="text" id="depositDesc" class="form-input" placeholder="Enter description">
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                <button type="submit" class="submit-btn">Deposit</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const API_URL = 'http://localhost:8080/api';
+    let authToken = localStorage.getItem('authToken');
+    let currentUser = null;
+    let userAccount = null;
+
+    // Check authentication
+    if (!authToken) {
+        window.location.href = 'index.html';
+    }
+
+    // Initialize dashboard
+    async function initDashboard() {
+        await loadUserInfo();
+        await loadAccounts();
+    }
+
+    async function loadUserInfo() {
+        try {
+            // Fetch real user data from database
+            const response = await fetch(`${API_URL}/users/me`, {
+                headers: { 'Authorization': `Bearer ${authToken}` }
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                currentUser = result.data;
+
+                // Update sidebar
+                document.getElementById('userName').textContent = currentUser.fullName;
+                document.getElementById('userEmail').textContent = currentUser.email;
+                document.getElementById('userAvatar').textContent = currentUser.fullName.substring(0, 2).toUpperCase();
+
+                // Update profile section
+                document.getElementById('profileUsername').value = currentUser.username;
+                document.getElementById('profileEmail').value = currentUser.email;
+                document.getElementById('profileFullName').value = currentUser.fullName;
+                document.getElementById('profilePhone').value = currentUser.phoneNumber;
+                document.getElementById('memberSince').value = new Date(currentUser.createdAt).toLocaleDateString();
+            } else {
+                // Fallback to localStorage if API fails
+                const username = localStorage.getItem('username') || 'User';
+                const email = localStorage.getItem('email') || 'user@example.com';
+
+                document.getElementById('userName').textContent = username;
+                document.getElementById('userEmail').textContent = email;
+                document.getElementById('userAvatar').textContent = username.substring(0, 2).toUpperCase();
+            }
+        } catch (error) {
+            console.error('Failed to load user info:', error);
+            // Fallback
+            const username = localStorage.getItem('username') || 'User';
+            const email = localStorage.getItem('email') || 'user@example.com';
+            document.getElementById('userName').textContent = username;
+            document.getElementById('userEmail').textContent = email;
+            document.getElementById('userAvatar').textContent = username.substring(0, 2).toUpperCase();
+        }
+    }
+
+    async function loadAccounts() {
+        try {
+            const response = await fetch(`${API_URL}/accounts`, {
+                headers: { 'Authorization': `Bearer ${authToken}` }
+            });
+
+            const result = await response.json();
+
+            if (result.success && result.data.length > 0) {
+                userAccount = result.data[0];
+                displayAccount(userAccount);
+                loadRecentTransactions();
+            } else {
+                showSetupScreen();
+            }
+        } catch (error) {
+            showAlert('Failed to load account: ' + error.message, 'error');
+        }
+    }
+
+    function showSetupScreen() {
+        document.getElementById('accountDisplay').innerHTML = `
+            <div class="section setup-card">
+                <div class="setup-icon">🏦</div>
+                <h2>Welcome to SecureBank!</h2>
+                <p>Let's create your banking account to get started</p>
+                <button class="setup-btn" onclick="openModal('createAccount')">Create Account</button>
+            </div>
+        `;
+    }
+
+    function displayAccount(account) {
+        const container = document.getElementById('accountDisplay');
+
+        container.innerHTML = `
+            <div class="account-card">
+                <div class="account-card-content">
+                    <div class="account-header">
+                        <span class="account-type-badge">${account.accountType} ACCOUNT</span>
+                        <span class="account-status">
+                            <span style="font-size: 1.2rem;">✓</span> Active
+                        </span>
+                    </div>
+
+                    <div class="account-details-grid">
+                        <div class="detail-item">
+                            <h4>Account Balance</h4>
+                            <div class="detail-value">₹${account.balance.toFixed(2)}</div>
+                        </div>
+                        <div class="detail-item">
+                            <h4>Account Type</h4>
+                            <div class="detail-value" style="font-size: 1.5rem;">${account.accountType}</div>
+                        </div>
+                        <div class="detail-item">
+                            <h4>Account Number</h4>
+                            <div class="detail-value account-number">${account.accountNumber}</div>
+                        </div>
+                    </div>
+
+                    <div class="account-actions">
+                        <button class="account-btn" onclick="showSection(event, 'transactions')">
+                            📊 View Transactions
+                        </button>
+                        <button class="account-btn" onclick="openModal('deposit')">
+                            💰 Quick Deposit
+                        </button>
+                        <button class="account-btn" onclick="openModal('withdraw')">
+                            💵 Quick Withdraw
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Update modals with account number
+        document.getElementById('depositAccount').value = account.accountNumber;
+        document.getElementById('withdrawAccount').value = account.accountNumber;
+        document.getElementById('transferFromAccount').value = account.accountNumber;
+    }
+
+    async function createAccount(event) {
+        event.preventDefault();
+
+        const data = {
+            accountNumber: document.getElementById('newAccountNumber').value,
+            accountType: document.getElementById('newAccountType').value,
+            pin: document.getElementById('newAccountPin').value,
+            initialDeposit: parseFloat(document.getElementById('newInitialDeposit').value) || 0
+        };
+
+        try {
+            const response = await fetch(`${API_URL}/accounts`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                showAlert('Account created successfully!', 'success');
+                closeModal();
+                userAccount = result.data;
+                displayAccount(userAccount);
+            } else {
+                showAlert(result.message, 'error');
+            }
+        } catch (error) {
+            showAlert('Failed to create account: ' + error.message, 'error');
+        }
+    }
+
+    async function loadRecentTransactions() {
+        if (!userAccount) return;
+
+        try {
+            const response = await fetch(`${API_URL}/transactions/account/${userAccount.accountNumber}`, {
+                headers: { 'Authorization': `Bearer ${authToken}` }
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                displayRecentTransactions(result.data.slice(0, 5));
+            }
+        } catch (error) {
+            console.error('Failed to load transactions:', error);
+        }
+    }
+
+    function displayRecentTransactions(transactions) {
+        const container = document.getElementById('recentTransactionsList');
+
+        if (transactions.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">📝</div>
+                    <p>No transactions yet. Make your first transaction!</p>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = `
+            <table class="transaction-table">
+                <thead>
+                    <tr>
+                        <th>Transaction</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${transactions.map(txn => {
+                        const isCredit = txn.type === 'DEPOSIT' || txn.type === 'TRANSFER_IN';
+                        const iconClass = txn.type === 'DEPOSIT' ? 'icon-deposit' :
+                                        txn.type === 'WITHDRAWAL' ? 'icon-withdrawal' : 'icon-transfer';
+                        const icon = txn.type === 'DEPOSIT' ? '↓' :
+                                   txn.type === 'WITHDRAWAL' ? '↑' : '⇄';
+
+                        return `
+                            <tr>
+                                <td>
+                                    <div class="transaction-info">
+                                        <div class="transaction-icon ${iconClass}">${icon}</div>
+                                        <div class="transaction-details">
+                                            <h4>${txn.type.replace('_', ' ')}</h4>
+                                            <p>${txn.description || 'No description'}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>${new Date(txn.timestamp).toLocaleDateString()}</td>
+                                <td class="${isCredit ? 'amount-credit' : 'amount-debit'}">
+                                    ${isCredit ? '+' : '-'}₹${txn.amount.toFixed(2)}
+                                </td>
+                                <td><span class="badge badge-success">${txn.status}</span></td>
+                            </tr>
+                        `;
+                    }).join('')}
+                </tbody>
+            </table>
+        `;
+    }
+
+    async function loadAllTransactions() {
+        if (!userAccount) return;
+
+        try {
+            const response = await fetch(`${API_URL}/transactions/account/${userAccount.accountNumber}`, {
+                headers: { 'Authorization': `Bearer ${authToken}` }
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                displayAllTransactions(result.data);
+            }
+        } catch (error) {
+            showAlert('Failed to load transactions', 'error');
+        }
+    }
+
+    function displayAllTransactions(transactions) {
+        const container = document.getElementById('allTransactionsList');
+
+        if (transactions.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">📝</div>
+                    <p>No transactions found</p>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = `
+            <table class="transaction-table">
+                <thead>
+                    <tr>
+                        <th>Transaction</th>
+                        <th>Date & Time</th>
+                        <th>Amount</th>
+                        <th>Balance After</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${transactions.map(txn => {
+                        const isCredit = txn.type === 'DEPOSIT' || txn.type === 'TRANSFER_IN';
+                        const iconClass = txn.type === 'DEPOSIT' ? 'icon-deposit' :
+                                        txn.type === 'WITHDRAWAL' ? 'icon-withdrawal' : 'icon-transfer';
+                        const icon = txn.type === 'DEPOSIT' ? '↓' :
+                                   txn.type === 'WITHDRAWAL' ? '↑' : '⇄';
+
+                        return `
+                            <tr>
+                                <td>
+                                    <div class="transaction-info">
+                                        <div class="transaction-icon ${iconClass}">${icon}</div>
+                                        <div class="transaction-details">
+                                            <h4>${txn.type.replace('_', ' ')}</h4>
+                                            <p>${txn.description || 'No description'}</p>
+                                            ${txn.relatedAccountNumber ? `<p style="font-size: 0.8rem;">Ref: ${txn.relatedAccountNumber}</p>` : ''}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>${new Date(txn.timestamp).toLocaleString()}</td>
+                                <td class="${isCredit ? 'amount-credit' : 'amount-debit'}">
+                                    ${isCredit ? '+' : '-'}₹${txn.amount.toFixed(2)}
+                                </td>
+                                <td style="font-weight: 600;">₹${txn.balanceAfter.toFixed(2)}</td>
+                                <td><span class="badge badge-success">${txn.status}</span></td>
+                            </tr>
+                        `;
+                    }).join('')}
+                </tbody>
+            </table>
+        `;
+    }
+
+    async function depositMoney(event) {
+        event.preventDefault();
+
+        const data = {
+            accountNumber: document.getElementById('depositAccount').value,
+            amount: parseFloat(document.getElementById('depositAmount').value),
+            description: document.getElementById('depositDesc').value || 'Deposit'
+        };
+
+        try {
+            const response = await fetch(`${API_URL}/transactions/deposit`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                showAlert('Deposit successful!', 'success');
+                closeModal();
+                loadAccounts();
+            } else {
+                showAlert(result.message, 'error');
+            }
+        } catch (error) {
+            showAlert('Failed to process deposit', 'error');
+        }
+    }
+
+    async function withdrawMoney(event) {
+        event.preventDefault();
+
+        const data = {
+            accountNumber: document.getElementById('withdrawAccount').value,
+            amount: parseFloat(document.getElementById('withdrawAmount').value),
+            pin: document.getElementById('withdrawPin').value,
+            description: document.getElementById('withdrawDesc').value || 'Withdrawal'
+        };
+
+        try {
+            const response = await fetch(`${API_URL}/transactions/withdraw`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                showAlert('Withdrawal successful!', 'success');
+                closeModal();
+                document.getElementById('withdrawPin').value = ''; // Clear PIN
+                loadAccounts();
+            } else {
+                showAlert(result.message, 'error');
+            }
+        } catch (error) {
+            showAlert('Failed to process withdrawal', 'error');
+        }
+    }
+
+    async function transferMoney(event) {
+        event.preventDefault();
+
+        const data = {
+            fromAccountNumber: document.getElementById('transferFromAccount').value,
+            toAccountNumber: document.getElementById('transferToAccount').value,
+            amount: parseFloat(document.getElementById('transferAmount').value),
+            pin: document.getElementById('transferPin').value,
+            description: document.getElementById('transferDescription').value || 'Transfer'
+        };
+
+        try {
+            const response = await fetch(`${API_URL}/transactions/transfer`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                showAlert('Transfer successful!', 'success');
+                document.getElementById('transferToAccount').value = '';
+                document.getElementById('transferAmount').value = '';
+                document.getElementById('transferPin').value = ''; // Clear PIN
+                document.getElementById('transferDescription').value = '';
+                loadAccounts();
+            } else {
+                showAlert(result.message, 'error');
+            }
+        } catch (error) {
+            showAlert('Failed to process transfer', 'error');
+        }
+    }
+
+    function showSection(event, sectionName) {
+        event.preventDefault();
+
+        // Update page title
+        const titles = {
+            'dashboard': 'Dashboard',
+            'transactions': 'All Transactions',
+            'transfer': 'Transfer Money',
+            'profile': 'Your Profile',
+            'settings': 'Settings'
+        };
+        document.getElementById('pageTitle').textContent = titles[sectionName];
+
+        // Hide all sections
+        document.querySelectorAll('.content-section').forEach(section => {
+            section.classList.remove('active');
+        });
+
+        // Show selected section
+        document.getElementById(sectionName + 'Section').classList.add('active');
+
+        // Update nav links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.remove('active');
+        });
+        event.target.closest('.nav-link').classList.add('active');
+
+        // Load data for specific sections
+        if (sectionName === 'transactions') {
+            loadAllTransactions();
+        }
+    }
+
+    function openModal(type) {
+        if (type === 'deposit') {
+            document.getElementById('depositModal').classList.add('active');
+        } else if (type === 'withdraw') {
+            document.getElementById('withdrawModal').classList.add('active');
+        } else if (type === 'createAccount') {
+            document.getElementById('createAccountModal').classList.add('active');
+        }
+    }
+
+    function closeModal() {
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.classList.remove('active');
+        });
+    }
+
+    function showAlert(message, type) {
+        const alertBox = document.getElementById('alertBox');
+        alertBox.textContent = message;
+        alertBox.className = `alert ${type}`;
+        alertBox.style.display = 'block';
+
+        setTimeout(() => {
+            alertBox.style.display = 'none';
+        }, 5000);
+    }
+
+    function logout() {
+        if (confirm('Are you sure you want to logout?')) {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('username');
+            localStorage.removeItem('email');
+            window.location.href = 'index.html';
+        }
+    }
+
+    // Close modal on outside click
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                closeModal();
+            }
+        });
+    });
+
+    // Initialize on load
+    initDashboard();
+</script>
+</body>
+</html>
