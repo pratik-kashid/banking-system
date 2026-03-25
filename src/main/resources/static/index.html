@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexBank - Premium Banking</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Auth Section -->
+        <div id="auth-section" class="glass-container">
+            <h1 class="logo">NexBank</h1>
+            <p class="subtitle">Experience the future of banking</p>
+            <div class="tabs">
+                <button id="tab-login" class="active" onclick="switchTab('login')">Login</button>
+                <button id="tab-register" onclick="switchTab('register')">Register</button>
+            </div>
+            
+            <form id="login-form">
+                <div class="input-group">
+                    <label>Username</label>
+                    <input type="text" id="login-username" required />
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="login-password" required />
+                </div>
+                <button type="submit" class="btn-primary">Sign In</button>
+            </form>
+
+            <form id="register-form" class="hide">
+                <div class="input-group">
+                    <label>Username</label>
+                    <input type="text" id="reg-username" required />
+                </div>
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" id="reg-email" required />
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="reg-password" required />
+                </div>
+                <button type="submit" class="btn-primary">Create Account</button>
+            </form>
+            <p id="auth-error" class="error-text"></p>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard-section" class="dashboard-container hide">
+            <aside class="sidebar glass-panel">
+                <h1 class="logo">NexBank</h1>
+                <nav>
+                    <a href="#" class="active">Dashboard</a>
+                    <a href="#" onclick="logout()">Logout</a>
+                </nav>
+            </aside>
+            <main class="main-content">
+                <header class="header glass-panel">
+                    <h2>Welcome back, <span id="user-greeting">User</span></h2>
+                    <div class="profile-icon"></div>
+                </header>
+                
+                <div class="content-grid">
+                    <!-- Accounts info -->
+                    <div class="card glass-panel gradient-card">
+                        <h3>Your Accounts</h3>
+                        <div id="accounts-list">
+                            <div class="loader"></div>
+                        </div>
+                        <button onclick="loadAccounts()" class="refresh-btn">⟳ Refresh</button>
+                    </div>
+
+                    <!-- Transfer Form -->
+                    <div class="card glass-panel">
+                        <h3>Transfer Funds</h3>
+                        <form id="transfer-form">
+                            <div class="input-group">
+                                <label>From Account</label>
+                                <select id="transfer-source" required></select>
+                            </div>
+                            <div class="input-group">
+                                <label>To Account Number</label>
+                                <input type="text" id="transfer-dest" placeholder="e.g. ACC1001" required />
+                            </div>
+                            <div class="input-group">
+                                <label>Amount ($)</label>
+                                <input type="number" step="0.01" id="transfer-amount" required />
+                            </div>
+                            <button type="submit" class="btn-primary" id="btn-transfer">Send Money</button>
+                            <p id="transfer-msg"></p>
+                        </form>
+                    </div>
+
+                    <!-- Transactions History -->
+                    <div class="card glass-panel full-width">
+                        <div class="card-header">
+                            <h3>Recent Transactions</h3>
+                            <select id="history-account-select" onchange="loadHistory()"></select>
+                        </div>
+                        <div class="table-container">
+                            <table id="transactions-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Type</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="transactions-body">
+                                    <tr><td colspan="3" class="text-center">Select an account to view history</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
